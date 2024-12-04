@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBTI Community</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/font.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/box.css')}}">
+    <script>
+        // JavaScript로 플래시 메시지를 받아 경고창(alert)으로 띄움
+        function showFlashMessage(message) {
+            if (message) {
+                alert(message);
+            }
+        };
+    </script>
+    <style>
+        .chat-link {
+            font-family: 'TTLaundryGothic';
+            text-decoration: none;
+            color: #FFFFFF;
+        }
+    
+        .chat-link:hover {
+            color: #0000FF; /* 마우스를 올렸을 때 글자색을 빨간색으로 변경 */
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+<div class="gray-container">
+      <div class="container mt-5">
+        <h1 class="text-center mb-4 " style="font-family: 'TTLaundryGothicB'; font-size: 36px; color: #333; background-color: #F5F5F5; padding: 10px 0;">
+          MBTI Community
+        </h1>
+        <div class="row mt-5">
+            <div class="col-md-3">
+                <div class="card card-istj">
+                    <div class="card-body text-center">
+                        <h3 class="card-title" style="font-family: 'TTLaundryGothicB';">ISTJ</h3>
+                        <p class="card-text" style="font-family: 'TTLaundryGothic';">실용적이고 조직적인, 안정적이며 책임감이 강한 유형</p>
+                        <a href={{url_for('chat', mbti_type='ISTJ')}} class="chat-link">&#62;ISTJ 채팅방 이동&#60;</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-isfj">
+                    <div class="card-body text-center">
+                        <h3 class="card-title" style="font-family: 'TTLaundryGothicB';">ISFJ</h3>
+                        <p class="card-text" style="font-family: 'TTLaundryGothic';">친절하고 현실적인, 진정성 있고 책임감이 강한 유형</p>
+                        <a href={{url_for('chat', mbti_type='ISFJ')}} class="chat-link">&#62;ISFJ 채팅방으로 이동&#60;</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-infj">
+                    <div class="card-body text-center">
+                        <h3 class="card-title" style="font-family: 'TTLaundryGothicB';">INFJ</h3>
+                        <p class="card-text" style="font-family: 'TTLaundryGothic';">비전이 있고 독창적이며 이해심이 깊고 이타적인 유형</p>
+                        <a href={{url_for('chat', mbti_type='INFJ')}} class="chat-link">&#62;INFJ 채팅방으로 이동&#60;</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-intj">
+                    <div class="card-body text-center">
+                        <h3 class="card-title" style="font-family: 'TTLaundryGothicB';">INTJ</h3>
+                        <p class="card-text" style="font-family: 'TTLaundryGothic';">독립적이고 혁신적인, 논리적이고 결정력이 강한 유형</p>
+                        <a href={{url_for('chat', mbti_type='INTJ')}} class="chat-link">&#62;INTJ 채팅방으로 이동&#60;</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card card-istp">
+                    <div class="card-body text-center">
+                        <h3 class="card-title" style="font-family: 'TTLaundryGothicB';">ISTP</h3>
+                        <p class="card-text" style="font-family: 'TTLaundryGothic';">논리적이고 안정감 있으며 실용적이고 적응력이 높은 유형</p>
+                        <a href={{url_for('chat', mbti_type='ISTP')}} class="chat-link">&#62;ISTP 채팅방으로 이동&#60;</a>
+                    </div>
+              </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card card-isfp">
+                <div class="card-body text-center">
+                    <h3 class="card-title" style="font-family: 'TTLaundryGothicB';">ISFP</h3>
+                    <p class="card-text" style="font-family: 'TTLaundryGothic';">온정적이고 융통성이 있으며 감성적이고 유연한 유형</p>
+                    <a href={{url_for('chat', mbti_type='ISFP')}} class="chat-link">&#62;ISFP 채팅방으로 이동&#60;</a>
+                </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card card-infp">
+                <div class="card-body text-center">
+                    <h3 class="card-title" style="font-family: 'TTLaundryGothicB';">INFP</h3>
+                    <p class="card-text" style="font-family: 'TTLaundryGothic';">이해심이 깊고 상상력이 풍부하며 이타적이고 이상주의적인 유형</p>
+                    <a href={{url_for('chat', mbti_type='INFP')}} class="chat-link">&#62;INFP 채팅방으로 이동&#60;</a>
+                </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card card-intp text-center">
+                <div class="card-body">
+                    <h3 class="card-title" style="font-family: 'TTLaundryGothicB';">INTP</h3>
+                    <p class="card-text" style="font-family: 'TTLaundryGothic';">분석적이고 창의적이며 논리적이고 비판적인 유형</p>
+                    <a href={{url_for('chat', mbti_type='INTP')}} class="chat-link">&#62;INTP 채팅방으로 이동&#60;</a>
+                </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card card-estp">
+                <div class="card-body text-center">
+                    <h3 class="card-title" style="font-family: 'TTLaundryGothicB';">ESTP</h3>
+                    <p class="card-text" style="font-family: 'TTLaundryGothic';">대담하고 현실적이며 적응력이 뛰어나고 탐험적인 유형</p>
+                    <a href={{url_for('chat', mbti_type='ESTP')}} class="chat-link">&#62;ESTP 채팅방으로 이동&#60;</a>
+                </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card card-esfp">
+                <div class="card-body text-center">
+                    <h3 class="card-title" style="font-family: 'TTLaundryGothicB';">ESFP</h3>
+                    <p class="card-text" style="font-family: 'TTLaundryGothic';">사교적이고 열정적이며 실용적이고 즐거움을 추구하는 유형</p>
+                    <a href={{url_for('chat', mbti_type='ESFP')}} class="chat-link">&#62;ESFP 채팅방으로 이동&#60;</a>
+                </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card card-enfp">
+                <div class="card-body text-center">
+                    <h3 class="card-title" style="font-family: 'TTLaundryGothicB';">ENFP</h3>
+                    <p class="card-text" style="font-family: 'TTLaundryGothic';">열정적이고 창의적이며 인간 중심적이고 즐거움을 추구하는 유형</p>
+                    <a href={{url_for('chat', mbti_type='ENFP')}} class="chat-link">&#62;ENFP 채팅방으로 이동&#60;</a>
+                </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card card-entp">
+                <div class="card-body text-center">
+                    <h3 class="card-title" style="font-family: 'TTLaundryGothicB';">ENTP</h3>
+                    <p class="card-text" style="font-family: 'TTLaundryGothic';">독창적이고 분석적이며 목표지향적이고 논쟁을 즐기는 유형</p>
+                    <a href={{url_for('chat', mbti_type='ENTP')}} class="chat-link">&#62;ENTP 채팅방으로 이동&#60;</a>
+                </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card card-estj">
+                <div class="card-body text-center">
+                    <h3 class="card-title" style="font-family: 'TTLaundryGothicB';">ESTJ</h3>
+                    <p class="card-text" style="font-family: 'TTLaundryGothic';">현실적이고 실용적이며 결단력이 있고 조직적인 유형</p>
+                    <a href={{url_for('chat', mbti_type='ESTJ')}} class="chat-link">&#62;ESTJ 채팅방으로 이동&#60;</a>
+                </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card card-esfj">
+                <div class="card-body text-center">
+                    <h3 class="card-title" style="font-family: 'TTLaundryGothicB';">ESFJ</h3>
+                    <p class="card-text" style="font-family: 'TTLaundryGothic';">친절하고 사교적이며 현실적이고 책임감이 강한 유형</p>
+                    <a href={{url_for('chat', mbti_type='ESFJ')}} class="chat-link">&#62;ESFJ 채팅방으로 이동&#60;</a>
+                </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card card-enfj">
+                <div class="card-body text-center">
+                    <h3 class="card-title" style="font-family: 'TTLaundryGothicB';">ENFJ</h3>
+                    <p class="card-text" style="font-family: 'TTLaundryGothic';">동정심이 많고 사교적이며 동기부여가 되는 유형</p>
+                    <a href={{url_for('chat', mbti_type='ENFJ')}} class="chat-link">&#62;ENFJ 채팅방으로 이동&#60;</a>
+                </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card card-entj">
+                <div class="card-body text-center">
+                    <h3 class="card-title" style="font-family: 'TTLaundryGothicB';">ENTJ</h3>
+                    <p class="card-text" style="font-family: 'TTLaundryGothic';">목표지향적이고 결단력이 있으며 리더십에 능한 유형</p>
+                    <a href={{url_for('chat', mbti_type='ENTJ')}} class="chat-link">&#62;ENTJ 채팅방으로 이동&#60;</a>
+                </div>
+            </div>
+          </div>      
+        </div>
+      </div>
+      
+    
+    <!--
+    jinja2 example
+    {%for i in range(10)%}
+        <div>
+            Hello
+        </div>
+    {%endfor%}
+        
+    
+    이미지 불러오는 법
+    <img src="{{url_for('static',filename='img/img1.jpg')}}">
+    자바스크립트 불러오는 법
+    <script type="text/javascript" src="{{url_for('static',filename='js/main.js')}}"></script>
+    --> 
+    <script type="text/javascript" src="{{url_for('static',filename='js/bootstrap.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static',filename='js/bootstrap.bundle.min.js')}}"></script>
+    <!-- 플래시 메시지를 JavaScript로 넘김 -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <script>
+            // 플래시 메시지를 경고창으로 표시
+            {% for category, message in messages %}
+                showFlashMessage("{{ message }}");
+            {% endfor %}
+        </script>
+    {% endif %}
+{% endwith %}
+</body>
+</html>

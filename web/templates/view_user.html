@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 페이지 - 유저 상세 정보</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/font.css')}}">
+    <style>
+        .table-container { margin-top: 20px; max-height: 200px; overflow-y: auto;}
+        .profile-image { width: 200px; height: 200px; background-color: #ddd; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 8px; }
+        .profile-image img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* 테이블 열 너비 설정 */
+        .chat-table .date-col { width: 220px; } /* 채팅 로그의 날짜 및 시간 */
+        .post-table .date-col, .comment-table .date-col { width: 20%; } /* 게시글 및 댓글의 날짜 */
+        .post-table .title-col, .comment-table .content-col { width: 60%; } /* 제목/내용 넓은 공간 */
+        .post-table .category-col { width: 20%; } /* 카테고리 */
+        
+        /* 링크 스타일 설정 */
+        .title-col a, .content-col a {
+            color: inherit; /* 기본 텍스트 색상 사용 */
+            text-decoration: none; /* 밑줄 제거 */
+        }
+        .title-col a:hover, .content-col a:hover {
+            color: #007bff; /* 마우스 올렸을 때 파란색으로 변경 */
+            text-decoration: underline; /* 마우스 올렸을 때 밑줄 추가 */
+        }
+        /* 기본 스타일 */
+        .search-btn {
+            background-color: white; /* 흰색 배경 */
+            color: black; /* 검정색 텍스트 */
+            border: none; /* 테두리 제거 */
+            cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+            font-family: 'TTLaundryGothic'; /* 폰트 설정 */
+        }
+  
+        /* 마우스 호버 효과 */
+        .search-btn:hover {
+            background-color: black; /* 마우스 호버 시 배경색을 검정으로 변경 */
+            color: white; /* 마우스 호버 시 텍스트 색상을 흰색으로 변경 */
+        }
+    </style>
+    <script>
+        function showFlashMessage(message) {
+            if (message) {
+                alert(message);
+            }
+        }
+    </script>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="profile-image">
+                    {% if user.profile_image %}
+                        <img src="{{ url_for('static', filename=user.profile_image) }}" alt="프로필 이미지">
+                    {% else %}
+                        <span style="font-family: 'TTLaundryGothic';">설정된 이미지 없음</span>
+                    {% endif %}
+                </div>
+                <h5 class="mt-3" style="font-family: 'TTLaundryGothic';">유저 상세 정보</h5>
+                <p style="font-family: 'TTLaundryGothic';">ID: {{ user.user_id }}</p>
+                <p style="font-family: 'TTLaundryGothic';">Email: {{ user.email }}</p>
+                <p style="font-family: 'TTLaundryGothic';">MBTI: {{ user.mbti }}</p>
+                
+                {%if user.user_id != 'admin'%}
+                <!-- 회원 탈퇴 버튼 -->
+                <button class="btn btn-danger mt-3" onclick="confirmDeletion('{{ user.user_id }}')" style="font-family: 'TTLaundryGothic';">회원 탈퇴</button>
+                {%endif%}
+            </div>
+            <div class="col-md-8">
+                <h5 style="font-family: 'TTLaundryGothic';">채팅 로그</h5>
+                <div class="table-responsive table-container">
+                    <table class="table table-bordered chat-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 10%;">
+                                    <input type="checkbox" id="selectAllChat">
+                                    <button class="btn btn-dark btn-sm" onclick="deleteSelected('chat')">X</button>
+                                </th>
+                                <th class="date-col" style="font-family: 'TTLaundryGothic';">Date</th>
+                                <th style="font-family: 'TTLaundryGothic';">Content</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for chat in chat_messages %}
+                            <tr>
+                                <td><input type="checkbox" class="chat-checkbox" value="{{ chat.id }}"></td>
+                                <td class="date-col" style="font-family: 'TTLaundryGothic';">{{ chat.timestamp.strftime('%Y-%m-%d %p %I:%M') }}</td>
+                                <td style="font-family: 'TTLaundryGothic';">{{ chat.content }}</td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="3" class="text-center" style="font-family: 'TTLaundryGothic';">채팅 메세지가 존재하지 않습니다.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <h5 class="mt-5" style="font-family: 'TTLaundryGothic';">게시글</h5>
+                <div class="table-responsive table-container">
+                    <table class="table table-bordered post-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 10%;">
+                                    <input type="checkbox" id="selectAllPosts">
+                                    <button class="btn btn-dark btn-sm" onclick="deleteSelected('post')">X</button>
+                                </th>
+                                <th class="date-col" style="font-family: 'TTLaundryGothic';">Date</th>
+                                <th class="title-col" style="font-family: 'TTLaundryGothic';">Title</th>
+                                <th class="category-col" style="font-family: 'TTLaundryGothic';">Category</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for post in posts %}
+                            <tr>
+                                <td><input type="checkbox" class="post-checkbox" value="{{ post.id }}"></td>
+                                <td class="date-col" style="font-family: 'TTLaundryGothic';">{{ post.created_at.strftime('%Y-%m-%d') }}</td>
+                                <td class="title-col" style="font-family: 'TTLaundryGothic';">
+                                    <a href="{{ url_for('content', category=post.category, post_id=post.category_post_id) }}">{{ post.title }}</a>
+                                </td>
+                                <td class="category-col" style="font-family: 'TTLaundryGothic';">{{ post.category }}</td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="4" class="text-center" style="font-family: 'TTLaundryGothic';">게시글이 존재하지 않습니다.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <h5 class="mt-5" style="font-family: 'TTLaundryGothic';">댓글</h5>
+                <div class="table-responsive table-container">
+                    <table class="table table-bordered comment-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 10%;">
+                                    <input type="checkbox" id="selectAllComments">
+                                    <button class="btn btn-dark btn-sm" onclick="deleteSelected('comment')">X</button>
+                                </th>
+                                <th class="date-col" style="font-family: 'TTLaundryGothic';">Date</th>
+                                <th class="content-col" style="font-family: 'TTLaundryGothic';">Content</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for comment in comments %}
+                            <tr>
+                                <td><input type="checkbox" class="comment-checkbox" value="{{ comment.id }}"></td>
+                                <td class="date-col" style="font-family: 'TTLaundryGothic';">{{ comment.created_at.strftime('%Y-%m-%d') }}</td>
+                                <td class="content-col" style="font-family: 'TTLaundryGothic';">
+                                    <a href="{{ url_for('content', category=comment.post.category, post_id=comment.post.category_post_id) }}">{{ comment.content }}</a>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="3" class="text-center" style="font-family: 'TTLaundryGothic';">댓글이 존재하지 않습니다.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // 회원 탈퇴 확인 및 삭제
+        function confirmDeletion(userId) {
+            if (confirm("정말로 회원 탈퇴하시겠습니까?")) {
+                $.ajax({
+                    url: `/admin/delete_user/${userId}`,
+                    type: 'POST',
+                    success: function(response) {
+                        alert(response.message);
+                        window.location.href = '/admin'; // 대시보드로 리다이렉트
+                    },
+                    error: function(error) {
+                        alert('회원 탈퇴 중 오류가 발생했습니다.');
+                    }
+                });
+            }
+        }
+
+        // 전체 선택 체크박스
+        $('#selectAllChat').click(function() {
+            $('.chat-checkbox').prop('checked', this.checked);
+        });
+        $('#selectAllPosts').click(function() {
+            $('.post-checkbox').prop('checked', this.checked);
+        });
+        $('#selectAllComments').click(function() {
+            $('.comment-checkbox').prop('checked', this.checked);
+        });
+
+        // 선택 삭제 함수
+        function deleteSelected(type) {
+            let ids = [];
+            $('.' + type + '-checkbox:checked').each(function() {
+                ids.push($(this).val());
+            });
+
+            if (ids.length > 0) {
+                $.ajax({
+                    url: `/admin/delete_${type}s`,
+                    type: 'POST',
+                    data: JSON.stringify({ ids: ids }),
+                    contentType: 'application/json',
+                    success: function(response) {
+                        alert(response.message);
+                        location.reload();
+                    },
+                    error: function(error) {
+                        alert('삭제 중 오류가 발생했습니다.');
+                    }
+                });
+            } else {
+                alert('삭제할 항목을 선택하세요.');
+            }
+        }
+    </script>
+    <!-- 플래시 메시지를 JavaScript로 넘김 -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <script>
+            // 플래시 메시지를 경고창으로 표시
+            {% for category, message in messages %}
+                showFlashMessage("{{ message }}");
+            {% endfor %}
+        </script>
+    {% endif %}
+    {% endwith %}
+</body>
+</html>

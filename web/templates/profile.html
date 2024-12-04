@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>프로필 변경</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/font.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/box.css')}}">
+    <script>
+        function showFlashMessage(message) {
+            if (message) {
+                alert(message);
+            }
+        }
+    </script>
+    <style>
+        /* X표시 */
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: gray;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 프로필 이미지 스타일 */
+        .profile-image-container {
+            position: relative;
+            display: inline-block;
+            width: 200px; /* 이미지 사이즈를 더 크게 */
+            height: 200px;
+        }
+
+        .profile-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        /* 변경 저장과 탈퇴 버튼을 같은 라인에 배치 */
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+      
+    <div class="container my-4">
+        <h2 style="font-family: 'TTLaundryGothic';">프로필 변경</h2>
+        <div class="profile-image-container">
+            {% if user.profile_image %}
+                <img src="{{ url_for('static', filename=user.profile_image) }}" alt="프로필 이미지">
+                <button class="close-btn" onclick="removeProfileImage()">X</button>
+            {% else %}
+                <p style="font-family: 'TTLaundryGothic';">프로필 이미지가 없습니다.</p>
+            {% endif %}
+        </div>
+        <form id="profileForm" method="POST" enctype="multipart/form-data" action="{{ url_for('profile') }}">
+            <!-- 프로필 이미지 -->
+            <div class="mb-3">
+                <label for="profilePicture" class="form-label" style="font-family: 'TTLaundryGothic';">프로필 사진</label>
+                <input type="file" class="form-control" name="profile_picture" id="profilePicture" style="font-family: 'TTLaundryGothic';">
+            </div>
+            <!-- 이메일 수정 -->
+            <div class="mb-3">
+                <label for="email" class="form-label" style="font-family: 'TTLaundryGothic';">이메일</label>
+                <input type="email" class="form-control" name="email" id="email" value="{{ user.email }}" style="font-family: 'TTLaundryGothic';">
+            </div>
+            <!-- MBTI 선택 -->
+            <div class="mb-3">
+                <label for="mbti" class="form-label" style="font-family: 'TTLaundryGothic';">새 MBTI</label>
+                <select class="form-select" name="mbti" id="mbti" style="font-family: 'TTLaundryGothic';">
+                    <option value="" selected>MBTI를 선택하세요</option>
+                    <!-- MBTI 옵션 -->
+                    {% for type in ['ISFP', 'ISFJ', 'ISTP', 'ISTJ', 'INFP', 'INFJ', 'INTP', 'INTJ', 'ESFP', 'ESFJ', 'ESTP', 'ESTJ', 'ENFP', 'ENFJ', 'ENTP', 'ENTJ'] %}
+                    <option value="{{ type }}" {% if user.mbti == type %}selected{% endif %}>{{ type }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- 비밀번호 변경 -->
+            <div class="mb-3">
+                <label for="newPassword" class="form-label" style="font-family: 'TTLaundryGothic';">새 비밀번호</label>
+                <input type="password" class="form-control" name="newPassword" id="newPassword">
+            </div>
+            <div class="mb-3">
+                <label for="confirmPassword" class="form-label" style="font-family: 'TTLaundryGothic';">새 비밀번호 확인</label>
+                <input type="password" class="form-control" name="confirmPassword" id="confirmPassword">
+            </div>
+            <div id="passwordError" class="text-danger" style="display: none; font-family: 'TTLaundryGothic';">비밀번호가 일치하지 않습니다.</div>
+            
+            <div class="button-container">
+                <form method="POST" action="{{ url_for('profile') }}">
+                    <!-- 변경 저장 버튼 -->
+                    <button type="submit" class="btn btn-primary" id="write-btn" style="font-family: 'TTLaundryGothic';">변경 저장</button>
+                </form>
+                
+                <form method="POST" action="{{ url_for('delete_account') }}" style="display: inline;">
+                    <button type="submit" class="btn btn-danger" style="font-family: 'TTLaundryGothic';">회원 탈퇴</button>
+                </form>
+            </div>
+        </form>
+        
+        
+    </div>
+
+    <!-- 프로필 이미지 제거 함수 -->
+    <script>
+        function removeProfileImage() {
+            if (confirm("프로필 이미지를 삭제하시겠습니까?")) {
+                fetch("{{ url_for('remove_profile_image') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ user_id: "{{ user.user_id }}" })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("프로필 이미지가 삭제되었습니다.");
+                        location.reload(); // 페이지 새로고침
+                    } else {
+                        alert("프로필 이미지 삭제 중 오류가 발생했습니다.");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+            }
+        }
+    </script>
+    <!-- 플래시 메시지를 JavaScript로 넘김 -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <script>
+            // 플래시 메시지를 경고창으로 표시
+            {% for category, message in messages %}
+                showFlashMessage("{{ message }}");
+            {% endfor %}
+        </script>
+    {% endif %}
+    {% endwith %}
+</body>
+</html>

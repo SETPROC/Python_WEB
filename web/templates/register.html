@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/font.css')}}">
+    <style>
+        .gray-container {
+            background-color: #f0efef; /* 연한 회색 */
+            padding: 20px; /* 컨테이너 내부 여백 */
+            border-radius: 10px; /* 컨테이너 모서리 둥글게 만들기 */
+        }
+                /* 드롭다운 메뉴가 화면 밖으로 넘어가지 않도록 위치 조정 */
+        .dropdown-menu {
+            right: 0; /* 드롭다운 메뉴를 네비게이션 바의 오른쪽 끝에 맞추기 */
+            left: auto; /* 드롭다운 메뉴가 왼쪽으로 넘어가지 않도록 설정 */
+            transform: translateX(-10%); /* 드롭다운 메뉴가 약간 중앙으로 이동 */
+        }
+        /* 기본 스타일 */
+.search-btn {
+    background-color: white; /* 흰색 배경 */
+    color: black; /* 검정색 텍스트 */
+    border: none; /* 테두리 제거 */
+    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+    font-family: 'TTLaundryGothic'; /* 폰트 설정 */
+  }
+  
+  /* 마우스 호버 효과 */
+  .search-btn:hover {
+    background-color: black; /* 마우스 호버 시 배경색을 검정으로 변경 */
+    color: white; /* 마우스 호버 시 텍스트 색상을 흰색으로 변경 */
+  }
+
+  #write-btn {
+    background-color: #000; /* 검정색 배경 */
+    color: #fff; /* 흰색 텍스트 */
+    border: none; /* 테두리 제거 */
+    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+  }
+  
+  #write-btn:hover {
+    background-color: #333; /* 마우스 호버 시 배경색 조정 */
+  }
+  .card {
+    border-radius: 10px; /* 카드 모서리 둥글게 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+.form-label {
+    font-family: 'TTLaundryGothic'; /* 폰트 스타일 */
+}
+
+.btn-primary {
+    background-color: #007bff; /* 버튼 색상 */
+    border: none; /* 테두리 제거 */
+    font-family: 'TTLaundryGothicB';
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* 호버 효과 */
+}
+
+.mbti-row {
+    margin-bottom: 15px; /* MBTI 라디오 버튼 간격 */
+}
+
+.text-center a {
+    font-size: 14px;
+    color: #007bff; /* 링크 색상 */
+}
+
+.text-center a:hover {
+    color: #0056b3; /* 링크 호버 색상 */
+    text-decoration: underline; /* 호버 시 밑줄 */
+}
+    </style>
+    
+    <script>
+        // JavaScript로 플래시 메시지를 받아 경고창(alert)으로 띄움
+        function showFlashMessage(message) {
+            if (message) {
+                alert(message);
+            }
+        }
+    </script>
+</head>
+
+<body style="background-color: #f0efef">
+    {% include 'navbar.html' %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <h2 class="text-center mb-4" style="font-family: 'TTLaundryGothicB';">회원가입</h2>
+                    <form action="{{ url_for('register') }}" method="POST">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">아이디</label>
+                            <input type="text" class="form-control" id="ID" name="user_id" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">이메일</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">비밀번호</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">비밀번호 확인</label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirm_password" required>
+                        </div>
+
+                        <!-- MBTI 선택 -->
+                        <div class="mb-3" style="font-family: 'TTLaundryGothicB';">
+                            <label for="mbti" class="form-label">MBTI</label>
+                            <div class="row mbti-row" >
+                                <div class="col-3">
+                                    <input type="radio" class="form-check-input" id="mbti1" name="mbti" value="ISTJ">
+                                    <label for="mbti1" class="form-check-label">ISTJ</label>
+                                </div>
+                                <div class="col-3">
+                                    <input type="radio" class="form-check-input" id="mbti2" name="mbti" value="ISFJ">
+                                    <label for="mbti2" class="form-check-label">ISFJ</label>
+                                </div>
+                                <div class="col-3">
+                                    <input type="radio" class="form-check-input" id="mbti3" name="mbti" value="INFJ">
+                                    <label for="mbti3" class="form-check-label">INFJ</label>
+                                </div>
+                                <div class="col-3">
+                                    <input type="radio" class="form-check-input" id="mbti4" name="mbti" value="INTJ">
+                                    <label for="mbti4" class="form-check-label">INTJ</label>
+                                </div>
+                            </div>
+                            <div class="row mbti-row">
+                                <div class="col-3">
+                                    <input type="radio" class="form-check-input" id="mbti5" name="mbti" value="ISTP">
+                                    <label for="mbti5" class="form-check-label">ISTP</label>
+                                </div>
+                                <div class="col-3">
+                                    <input type="radio" class="form-check-input" id="mbti6" name="mbti" value="ISFP">
+                                    <label for="mbti6" class="form-check-label">ISFP</label>
+                                </div>
+                                <div class="col-3">
+                                    <input type="radio" class="form-check-input" id="mbti7" name="mbti" value="INFP">
+                                    <label for="mbti7" class="form-check-label">INFP</label>
+                                </div>
+                                <div class="col-3">
+                                    <input type="radio" class="form-check-input" id="mbti8" name="mbti" value="INTP">
+                                    <label for="mbti8" class="form-check-label">INTP</label>
+                                </div>
+                            </div>
+                            <div class="row mbti-row">
+                                <div class="col-3">
+                                    <input type="radio" class="form-check-input" id="mbti9" name="mbti" value="ESTP">
+                                    <label for="mbti9" class="form-check-label">ESTP</label>
+                                </div>
+                                <div class="col-3">
+                                    <input type="radio" class="form-check-input" id="mbti10" name="mbti" value="ESFP">
+                                    <label for="mbti10" class="form-check-label">ESFP</label>
+                                </div>
+                                <div class="col-3">
+                                    <input type="radio" class="form-check-input" id="mbti11" name="mbti" value="ENFP">
+                                    <label for="mbti11" class="form-check-label">ENFP</label>
+                                </div>
+                                <div class="col-3">
+                                    <input type="radio" class="form-check-input" id="mbti12" name="mbti" value="ENTP">
+                                    <label for="mbti12" class="form-check-label">ENTP</label>
+                                </div>
+                            </div>
+                            <div class="row mbti-row">
+                                <div class="col-3">
+                                    <input type="radio" class="form-check-input" id="mbti13" name="mbti" value="ESTJ">
+                                    <label for="mbti13" class="form-check-label">ESTJ</label>
+                                </div>
+                                <div class="col-3">
+                                    <input type="radio" class="form-check-input" id="mbti14" name="mbti" value="ESFJ">
+                                    <label for="mbti14" class="form-check-label">ESFJ</label>
+                                </div>
+                                <div class="col-3">
+                                    <input type="radio" class="form-check-input" id="mbti15" name="mbti" value="ENFJ">
+                                    <label for="mbti15" class="form-check-label">ENFJ</label>
+                                </div>
+                                <div class="col-3">
+                                    <input type="radio" class="form-check-input" id="mbti16" name="mbti" value="ENTJ">
+                                    <label for="mbti16" class="form-check-label">ENTJ</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn btn-primary">가입하기</button>
+                        </div>
+                    </form>
+
+                    <!-- MBTI 테스트 페이지로 이동 -->
+                    <div class="text-center mt-4" style="font-family: 'TTLaundryGothicB';">
+                        <a href="{{ url_for('mbti') }}">MBTI 테스트 바로가기</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>       
+            
+   
+       
+              
+       
+          
+    <!--
+    jinja2 example
+    {%for i in range(10)%}
+        <div>
+            Hello
+        </div>
+    {%endfor%}
+        
+    
+    이미지 불러오는 법
+    <img src="{{url_for('static',filename='img/img1.jpg')}}">
+    자바스크립트 불러오는 법
+    <script type="text/javascript" src="{{url_for('static',filename='js/main.js')}}"></script>
+    --> 
+    <script type="text/javascript" src="{{url_for('static',filename='js/bootstrap.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static',filename='js/bootstrap.bundle.min.js')}}"></script>
+    <!-- 플래시 메시지를 JavaScript로 넘김 -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <script>
+                // 첫 번째 메시지를 경고창으로 표시
+                {% for category, message in messages %}
+                    showFlashMessage("{{ message }}");
+                {% endfor %}
+            </script>
+        {% endif %}
+    {% endwith %}
+</body>
+</html>

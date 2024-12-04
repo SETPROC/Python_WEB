@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>유저 관리</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/table.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/font.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/box.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/post.css')}}">
+    <style>
+        /* 유저 목록 테이블 스타일 */
+        .user-table-container {
+            max-height: 600px; /* 스크롤이 생기기 시작하는 최대 높이 */
+            overflow-y: auto;
+        }
+        
+        /* 프로필 이미지 스타일 */
+        .profile-img-container {
+            text-align: center;
+        }
+
+        .profile-img {
+            width: 70px; /* 이미지 크기 조정 */
+            height: 70px;
+            object-fit: cover;
+            border-radius: 50%; /* 원형 이미지 */
+        }
+
+        /* 아이디, 이메일, MBTI 등의 정보를 감싸는 스타일 */
+        .user-info {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        /* 각 유저 정보 행에 대한 스타일 */
+        .user-row {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        /* "상세 보기" 버튼 스타일 */
+        .view-btn {
+            font-size: 12px;
+        }
+    </style>
+    <script>
+        // JavaScript로 플래시 메시지를 받아 경고창(alert)으로 띄움
+        function showFlashMessage(message) {
+            if (message) {
+                alert(message);
+            }
+        };
+    </script>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div class="container">
+        <h1 class="mt-5">관리자 대시보드</h1>
+        <h3 class="mt-4">유저 목록</h3>
+        
+        <!-- 유저 목록 테이블을 감싸는 div에 스크롤 설정 -->
+        <div class="user-table-container">
+            <table class="table table-bordered mt-3">
+                <thead>
+                    <tr>
+                        <th class="text-center" style="font-family: 'TTLaundryGothic';">아이디</th>
+                        <th class="text-center" style="font-family: 'TTLaundryGothic';">이메일</th>
+                        <th class="text-center" style="font-family: 'TTLaundryGothic';">MBTI 유형</th>
+                        <th class="text-center" style="font-family: 'TTLaundryGothic';">프로필 이미지</th>
+                        <th class="text-center" style="font-family: 'TTLaundryGothic';">상세 보기</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr class="user-row">
+                        <td class="user-info" style="font-family: 'TTLaundryGothic';">{{ user.user_id }}</td>
+                        <td class="user-info" style="font-family: 'TTLaundryGothic';">{{ user.email }}</td>
+                        <td class="user-info" style="font-family: 'TTLaundryGothic';">{{ user.mbti }}</td>
+                        <td class="profile-img-container">
+                            <img src="{{ url_for('static', filename=user.profile_image or 'img/default_profile.png') }}" alt="프로필 이미지" class="profile-img">
+                        </td>
+                        <td class="user-info">
+                            <a href="{{ url_for('view_user', user_id=user.user_id) }}" class="btn btn-primary btn-sm view-btn" style="font-family: 'TTLaundryGothic';">상세 보기</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 플래시 메시지를 JavaScript로 넘김 -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <script>
+            // 플래시 메시지를 경고창으로 표시
+            {% for category, message in messages %}
+                showFlashMessage("{{ message }}");
+            {% endfor %}
+        </script>
+    {% endif %}
+    {% endwith %}
+</body>
+</html>

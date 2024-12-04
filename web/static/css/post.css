@@ -1,0 +1,29 @@
+body {
+    font-family: 'TTLaundryGothic', sans-serif;
+  }
+  .post-title {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  .post-meta {
+    font-size: 0.9rem;
+    color: gray;
+  }
+  .post-content {
+    margin-top: 2rem;
+  }
+  .comment {
+    margin-top: 1.5rem;
+  }
+  .comment-author {
+    font-weight: bold;
+  }
+  .comment-date {
+    font-size: 0.9rem;
+    color: gray;
+  }
+  .comment-mbti {
+    font-size: 0.9rem;
+    color: blue;
+    margin-left: 10px;
+  }

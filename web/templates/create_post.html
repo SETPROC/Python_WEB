@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBTI 게시글 작성</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/font.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/box.css')}}">
+    <script>
+      // JavaScript로 플래시 메시지를 받아 경고창(alert)으로 띄움
+      function showFlashMessage(message) {
+          if (message) {
+              alert(message);
+          }
+      };
+    </script>
+    <style>
+        /* 드롭다운 메뉴가 화면 밖으로 넘어가지 않도록 위치 조정 */
+        .dropdown-menu {
+          right: 0; /* 드롭다운 메뉴를 네비게이션 바의 오른쪽 끝에 맞추기 */
+          left: auto; /* 드롭다운 메뉴가 왼쪽으로 넘어가지 않도록 설정 */
+          transform: translateX(-10%); /* 드롭다운 메뉴가 약간 중앙으로 이동 */
+        }
+    </style>
+
+  </head>
+
+<body>
+  {% include 'navbar.html' %}
+      <div class="container">
+        <header id="article-form-header" class="py-5 text-center">
+            <h1 style="font-family: 'TTLaundryGothic';">게시글 작성</h1>
+        </header>
+        <form id="article-form" method="POST" action="{{ url_for('create_post', category=category) }}" enctype="multipart/form-data">
+          <div class="row mb-3 justify-content-md-center">
+              <label for="title" class="col-sm-2 col-lg-1 col-form-label text-sm-end" style="font-family: 'TTLaundryGothic';">제목</label>
+              <div class="col-sm-8 col-lg-9">
+                  <input type="text" class="form-control" id="title" name="title" required>
+              </div>
+          </div>
+          <div class="row mb-3 justify-content-md-center">
+              <label for="content" class="col-sm-2 col-lg-1 col-form-label text-sm-end" style="font-family: 'TTLaundryGothic';">본문</label>
+              <div class="col-sm-8 col-lg-9">
+                  <textarea class="form-control" id="content" name="content" rows="10" required></textarea>
+              </div>
+          </div>
+          <div class="row mb-4 justify-content-md-center">
+              <label for="image" class="col-sm-2 col-lg-1 col-form-label text-sm-end" style="font-family: 'TTLaundryGothic';">사진 첨부</label>
+              <div class="col-sm-8 col-lg-9">
+                  <input type="file" class="form-control-file" id="image" name="image">
+              </div>
+          </div>
+          <div class="row mb-5 justify-content-md-center">
+              <div class="col-sm-10 d-grid gap-2 d-sm-flex justify-content-sm-end">
+                  <button type="submit" class="btn btn-primary" id="submit-button" style="font-family: 'TTLaundryGothic';
+                  background-color: #000; color: #fff; border: none;">저장</button>
+                  <button type="button" class="btn btn-secondary" id="cancel-button" style="font-family: 'TTLaundryGothic';">
+                      <a href="/debate" style="color: inherit; text-decoration: none;">취소</a>
+                  </button>
+              </div>
+          </div>
+      </form>
+      
+
+    
+    <!--
+    jinja2 example
+    {%for i in range(10)%}
+        <div>
+            Hello
+        </div>
+    {%endfor%}
+        
+    
+    이미지 불러오는 법
+    <img src="{{url_for('static',filename='img/img1.jpg')}}">
+    자바스크립트 불러오는 법
+    <script type="text/javascript" src="{{url_for('static',filename='js/main.js')}}"></script>
+    --> 
+    <script type="text/javascript" src="{{url_for('static',filename='js/bootstrap.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static',filename='js/bootstrap.bundle.min.js')}}"></script>
+    <!-- 플래시 메시지를 JavaScript로 넘김 -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <script>
+            // 플래시 메시지를 경고창으로 표시
+            {% for category, message in messages %}
+                showFlashMessage("{{ message }}");
+            {% endfor %}
+        </script>
+    {% endif %}
+{% endwith %}
+</body>
+</html>

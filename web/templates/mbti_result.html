@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBTI 결과</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/font.css')}}">
+    <style>
+            /* 드롭다운 메뉴가 화면 밖으로 넘어가지 않도록 위치 조정 */
+    .dropdown-menu {
+        right: 0; /* 드롭다운 메뉴를 네비게이션 바의 오른쪽 끝에 맞추기 */
+        left: auto; /* 드롭다운 메뉴가 왼쪽으로 넘어가지 않도록 설정 */
+        transform: translateX(-10%); /* 드롭다운 메뉴가 약간 중앙으로 이동 */
+    }
+    /* 기본 스타일 */
+.search-btn {
+    background-color: white; /* 흰색 배경 */
+    color: black; /* 검정색 텍스트 */
+    border: none; /* 테두리 제거 */
+    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+    font-family: 'TTLaundryGothic'; /* 폰트 설정 */
+  }
+  
+  /* 마우스 호버 효과 */
+  .search-btn:hover {
+    background-color: black; /* 마우스 호버 시 배경색을 검정으로 변경 */
+    color: white; /* 마우스 호버 시 텍스트 색상을 흰색으로 변경 */
+  }
+
+  #write-btn {
+    background-color: #000; /* 검정색 배경 */
+    color: #fff; /* 흰색 텍스트 */
+    border: none; /* 테두리 제거 */
+    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+  }
+  
+  #write-btn:hover {
+    background-color: #333; /* 마우스 호버 시 배경색 조정 */
+  }
+    .d-flex .btn {
+        margin: 0 10px; /* 버튼 사이 간격 조정 */
+    }
+    </style>
+</head>
+<body>
+    {%include "navbar.html"%}
+    <div class="container mt-5">
+        <div class="card shadow">
+            <div class="card-header text-center bg-primary text-white" style="font-family: 'TTLaundryGothicB';">
+                <h2>MBTI 결과</h2>
+            </div>
+            <div class="card-body text-center" style="font-family: 'TTLaundryGothicB';">
+                {% if is_tie %}
+                    <p>일부 항목에서 동점이 발생했습니다. 보다 정밀한 테스트를 위해 아래 사이트를 이용해보세요.</p>
+                    <div class="d-flex justify-content-center mt-3" >
+                        <a href="https://www.16personalities.com/ko" class="btn btn-info mx-2" target="_blank" style="min-width: 150px; /* 버튼 크기를 일정하게 유지 */">16 Personalities</a>
+                        <a href="https://kmbti.co.kr/MBTItest/index.html" class="btn btn-info mx-2" target="_blank" style="min-width: 150px; /* 버튼 크기를 일정하게 유지 */">K-MBTI 테스트</a>
+                    </div>
+                {% else %}
+                    <h3 style="font-family: 'TTLaundryGothicB';">당신의 MBTI는 <span class="text-primary">{{ result }}</span>입니다!</h3>
+                {% endif %}
+                <div class="d-flex justify-content-center mt-4">
+                    <a href="{{ url_for('mbti') }}" class="btn btn-secondary">다시 테스트하기</a>
+                    {% if session.get('user_id') %}
+                        <form method="POST" action="{{ url_for('update_mbti') }}" style="display: inline;">
+                            <input type="hidden" name="new_mbti" value="{{ result }}">
+                            <button type="submit" class="btn btn-success">MBTI 변경하기</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- 플래시 메시지를 JavaScript로 넘김 -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <script>
+            // 플래시 메시지를 경고창으로 표시
+            {% for category, message in messages %}
+                showFlashMessage("{{ message }}");
+            {% endfor %}
+        </script>
+    {% endif %}
+    {% endwith %}
+</body>
+</html>

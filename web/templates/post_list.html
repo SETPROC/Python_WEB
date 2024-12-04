@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/font.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/box.css')}}">
+    <script>
+      // JavaScript로 플래시 메시지를 받아 경고창(alert)으로 띄움
+      function showFlashMessage(message) {
+          if (message) {
+              alert(message);
+          }
+      }
+  </script>
+  <style>
+    /* 검색창과 MBTI 카테고리 버튼을 한 줄로 배치 */
+    .search-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .search-container {
+            display: flex;
+            justify-content: flex-end; /* 오른쪽 정렬 */
+            align-items: center;
+            gap: 10px; /* 항목 간 간격 설정 */
+        }
+        .search-container form {
+            display: flex;
+            align-items: center;
+        }
+        .search-container .input-group {
+            width: 300px;
+        }
+        .search-container select {
+            width: 180px; /* 필터 선택 박스 크기 조정 */
+        }
+        .search-container button {
+            font-family: 'TTLaundryGothic';
+        }
+        .btn-dark {
+            font-family: 'TTLaundryGothic';
+        }
+  </style>
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+    <div class="container mb-3">
+        <div class="search-container">
+            <form action="{{ url_for('post_list', category=category) }}" method="GET" class="d-flex justify-content-end align-items-center">
+                <div class="ms-2">
+                    <select name="mbti_filter" class="form-select form-select-sm" style="font-family:'TTLaundryGothic';">
+                        <option value="">전체 MBTI</option>
+                            <option value="ISFP" {% if mbti_filter == 'ISFP' %}selected{% endif %}>ISFP</option>
+                            <option value="ISFJ" {% if mbti_filter == 'ISFJ' %}selected{% endif %}>ISFJ</option>
+                            <option value="INFJ" {% if mbti_filter == 'INFJ' %}selected{% endif %}>INFJ</option>
+                            <option value="INTJ" {% if mbti_filter == 'INTJ' %}selected{% endif %}>INTJ</option>
+                            <option value="ISTP" {% if mbti_filter == 'ISTP' %}selected{% endif %}>ISTP</option>
+                            <option value="ISFP" {% if mbti_filter == 'ISFP' %}selected{% endif %}>ISFP</option>
+                            <option value="INFP" {% if mbti_filter == 'INFP' %}selected{% endif %}>INFP</option>
+                            <option value="INTP" {% if mbti_filter == 'INTP' %}selected{% endif %}>INTP</option>
+                            <option value="ESTP" {% if mbti_filter == 'ESTP' %}selected{% endif %}>ESTP</option>
+                            <option value="ESFP" {% if mbti_filter == 'ESFP' %}selected{% endif %}>ESFP</option>
+                            <option value="ENFP" {% if mbti_filter == 'ENFP' %}selected{% endif %}>ENFP</option>
+                            <option value="ENTP" {% if mbti_filter == 'ENTP' %}selected{% endif %}>ENTP</option>
+                            <option value="ESTJ" {% if mbti_filter == 'ESTJ' %}selected{% endif %}>ESTJ</option>
+                            <option value="ESFJ" {% if mbti_filter == 'ESFJ' %}selected{% endif %}>ESFJ</option>
+                            <option value="ENFJ" {% if mbti_filter == 'ENFJ' %}selected{% endif %}>ENFJ</option>
+                            <option value="ENTJ" {% if mbti_filter == 'ENTJ' %}selected{% endif %}>ENTJ</option>
+                    </select>
+                </div>
+                <div class="input-group" style="width: 300px;">
+                    <input type="text" name="search" value="{{ search_query }}" class="form-control form-control-sm" placeholder="검색어를 입력하세요" aria-label="검색어를 입력하세요" style="font-family:'TTLaundryGothic';">
+                    <button class="btn btn-outline-secondary" type="submit" style="font-family:'TTLaundryGothic';">검색</button>
+                </div>
+                {% if session.get('user_id') %}
+                    <a href="/{{ category }}/write" class="btn btn-dark ms-2" style="font-family: 'TTLaundryGothic'; color: #fff; text-decoration: none;">글쓰기</a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="text-center" style="width: 50px;background-color: #f2f2f2; font-family:'TTLaundryGothic';">No</th>
+                <th class="text-center" style="width: 300px;background-color: #f2f2f2; font-family:'TTLaundryGothic';">제목</th>
+                <th class="text-center" style="width: 50px;background-color: #f2f2f2; font-family:'TTLaundryGothic';">조회수</th>
+                <th class="text-center" style="width: 50px;background-color: #f2f2f2; font-family:'TTLaundryGothic';">추천수</th>
+                <th class="text-center" style="width: 100px;background-color: #f2f2f2; font-family:'TTLaundryGothic';">작성일자</th>
+                <th class="text-center" style="width: 100px;background-color: #f2f2f2; font-family:'TTLaundryGothic';">작성자</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+            <tr>
+                <td class="text-center" style="font-family:'TTLaundryGothic';">{{ loop.index }}</td>
+                <td class="text-center" style="font-family:'TTLaundryGothic';">
+                    <a href="{{ url_for('content', category=post.category, post_id=post.category_post_id) }}" style="color: inherit; text-decoration: none; font-family:'TTLaundryGothic';">
+                        {{ post.title }} ({{ post.comments | length }})
+                    </a>
+                </td>
+                <td class="text-center" style="font-family:'TTLaundryGothic';">{{ post.views }}</td>
+                <td class="text-center" style="font-family:'TTLaundryGothic';">{{ post.recommendations }}</td>
+                <td class="text-center" style="font-family:'TTLaundryGothic';">{{ post.created_at.strftime('%Y-%m-%d') }}</td>
+                <td class="text-center" style="font-family:'TTLaundryGothic';">{{ post.author.user_id }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" class="text-center" style="font-family:'TTLaundryGothic';">게시글이 없습니다.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <!-- 페이지 네비게이션 -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if posts.has_prev %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('post_list', category=category, page=1) }}">&laquo; 처음 페이지</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('post_list', category=category, page=posts.prev_num) }}">&laquo;</a>
+            </li>
+            {% endif %}
+
+            {% for page_num in posts.iter_pages(left_edge=2, right_edge=2, left_current=2, right_current=2) %}
+            <li class="page-item {% if page_num == posts.page %}active{% endif %}">
+                <a class="page-link" href="{{ url_for('post_list', category=category, page=page_num) }}">{{ page_num }}</a>
+            </li>
+            {% endfor %}
+
+            {% if posts.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('post_list', category=category, page=posts.next_num) }}">다음</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('post_list', category=category, page=posts.pages) }}">끝 페이지 &raquo;</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    
+    <script type="text/javascript" src="{{url_for('static',filename='js/bootstrap.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static',filename='js/bootstrap.bundle.min.js')}}"></script>
+    <!-- 플래시 메시지를 JavaScript로 넘김 -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <script>
+            // 플래시 메시지를 경고창으로 표시
+            {% for category, message in messages %}
+                showFlashMessage("{{ message }}");
+            {% endfor %}
+        </script>
+    {% endif %}
+    {% endwith %}
+</body>
+</html>

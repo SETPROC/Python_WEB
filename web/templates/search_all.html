@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전체 게시판 검색 결과</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/font.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/box.css')}}">
+    <style>
+            /* 드롭다운 메뉴가 화면 밖으로 넘어가지 않도록 위치 조정 */
+    .dropdown-menu {
+        right: 0; /* 드롭다운 메뉴를 네비게이션 바의 오른쪽 끝에 맞추기 */
+        left: auto; /* 드롭다운 메뉴가 왼쪽으로 넘어가지 않도록 설정 */
+        transform: translateX(-10%); /* 드롭다운 메뉴가 약간 중앙으로 이동 */
+    }
+    </style>
+    <script>
+        // JavaScript로 플래시 메시지를 받아 경고창(alert)으로 띄움
+        function showFlashMessage(message) {
+            if (message) {
+                alert(message);
+            }
+        };
+    </script>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    
+    <div class="container mt-5">
+        <h2 class="mb-4" style="font-family: 'TTLaundryGothic';">전체 게시판 검색 결과</h2>
+
+        <!-- 검색창 -->
+        <form method="GET" action="{{ url_for('search_all') }}" class="mb-4">
+            <div class="input-group">
+                <input type="text" class="form-control" name="search" placeholder="검색어를 입력하세요" value="{{ search_query }}" style="font-family: 'TTLaundryGothic';">
+                <button class="btn btn-secondary" type="submit" style="font-family: 'TTLaundryGothic';">검색</button>
+            </div>
+        </form>
+
+        <!-- 검색 결과 목록 -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-center" style="width: 50px; background-color: #f2f2f2; font-family: 'TTLaundryGothic';">No</th>
+                    <th class="text-center" style="width: 300px; background-color: #f2f2f2; font-family: 'TTLaundryGothic';">제목</th>
+                    <th class="text-center" style="width: 100px; background-color: #f2f2f2; font-family: 'TTLaundryGothic';">카테고리</th>
+                    <th class="text-center" style="width: 100px; background-color: #f2f2f2; font-family: 'TTLaundryGothic';">작성일자</th>
+                    <th class="text-center" style="width: 100px; background-color: #f2f2f2; font-family: 'TTLaundryGothic';">작성자</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for post in posts.items %}
+                <tr>
+                    <td class="text-center" style="font-family: 'TTLaundryGothic';">{{ loop.index + (posts.page - 1) * posts.per_page }}</td>
+                    <td style="font-family: 'TTLaundryGothic';">
+                        <a href="{{ url_for('content', category=post.category, post_id=post.category_post_id) }}" style="text-decoration: none; color: inherit;">
+                            {{ post.title }} ({{ post.comments | length }})
+                        </a>
+                    </td>
+                    <td class="text-center" style="font-family: 'TTLaundryGothic';">{{ post.category }}</td>
+                    <td class="text-center" style="font-family: 'TTLaundryGothic';">{{ post.created_at.strftime('%Y-%m-%d') }}</td>
+                    <td class="text-center" style="font-family: 'TTLaundryGothic';">{{ post.author.user_id }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center" style="font-family: 'TTLaundryGothic';">검색 결과가 없습니다.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- 페이지 네비게이션 -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if posts.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('search_all', search=search_query, page=1) }}" style="font-family: 'TTLaundryGothic';">&laquo; 처음</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('search_all', search=search_query, page=posts.prev_num) }}" style="font-family: 'TTLaundryGothic';">&laquo; 이전</a>
+                </li>
+                {% endif %}
+
+                {% for page_num in posts.iter_pages(left_edge=2, right_edge=2, left_current=2, right_current=2) %}
+                <li class="page-item {% if page_num == posts.page %}active{% endif %}">
+                    <a class="page-link" href="{{ url_for('search_all', search=search_query, page=page_num) }}" style="font-family: 'TTLaundryGothic';">{{ page_num }}</a>
+                </li>
+                {% endfor %}
+
+                {% if posts.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('search_all', search=search_query, page=posts.next_num) }}" style="font-family: 'TTLaundryGothic';">다음 &raquo;</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('search_all', search=search_query, page=posts.pages) }}" style="font-family: 'TTLaundryGothic';">끝 &raquo;</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    <!-- 플래시 메시지를 JavaScript로 넘김 -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <script>
+            // 플래시 메시지를 경고창으로 표시
+            {% for category, message in messages %}
+                showFlashMessage("{{ message }}");
+            {% endfor %}
+        </script>
+    {% endif %}
+    {% endwith %}
+</body>
+</html>

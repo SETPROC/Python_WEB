@@ -1,0 +1,165 @@
+.box {
+    width: 30px;
+    height: 150px; /* 높이를 조정합니다 */
+    /*margin: 1px;*/
+    border: 1px solid #000000;
+    /*margin-top: 10px;*/
+  }
+  .mbti-section {
+    background-color: #f8f9fa; /* 배경색 */
+    color: #343a40; /* 텍스트 색상 */
+    padding: 20px; /* 패딩 */
+    margin-bottom: 20px; /* 단락 사이 간격 */
+    border: 1px solid #dee2e6; /* 테두리 */
+    border-radius: 5px; /* 테두리 모서리 둥글게 */
+}
+.card-body {
+    height: 165px;
+    overflow-y: auto;
+}
+/* ISTJ */
+.card-istj {
+    background-color: #ABD7F2; 
+}
+
+/* ISFJ */
+.card-isfj {
+    background-color: #C7E281; 
+}
+
+/* INFJ */
+.card-infj {
+    background-color: #F7B492; 
+}
+
+/* INTJ */
+.card-intj {
+    background-color: #FAB8F2;
+}
+
+/* ISTP */
+.card-istp {
+    background-color: #7EE6E7;
+}
+
+/* ISFP */
+.card-isfp {
+    background-color: #FBBCE1;
+}
+
+/* INFP */
+.card-infp {
+    background-color: #C2D3FE;
+}
+
+/* INTP */
+.card-intp {
+    background-color: #E7E197;
+}
+
+/* ESTP */
+.card-estp {
+    background-color: #EADAC1; 
+}
+
+/* ESFP */
+.card-esfp {
+    background-color: #E3C8F5;
+}
+
+/* ENFP */
+.card-enfp {
+    background-color: #FCD7AA;
+}
+
+/* ENTP */
+.card-entp {
+    background-color: #BFE2F1;
+}
+
+/* ESTJ */
+.card-estj {
+    background-color: #C2C2C2;
+}
+
+/* ESFJ */
+.card-esfj {
+    background-color: #F9CC88;
+}
+
+/* ENFJ */
+.card-enfj {
+    background-color: #A8DFC0;
+}
+
+/* ENTJ */
+.card-entj {
+    background-color: #D7B4D4;
+}
+
+.gray-container {
+    background-color: #f0efef; /* 연한 회색 */
+    padding: 20px; /* 컨테이너 내부 여백 */
+    border-radius: 10px; /* 컨테이너 모서리 둥글게 만들기 */
+}
+
+/* 기본 스타일 */
+.search-btn {
+    background-color: white; /* 흰색 배경 */
+    color: black; /* 검정색 텍스트 */
+    border: none; /* 테두리 제거 */
+    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+    font-family: 'TTLaundryGothic'; /* 폰트 설정 */
+  }
+  
+  /* 마우스 호버 효과 */
+  .search-btn:hover {
+    background-color: black; /* 마우스 호버 시 배경색을 검정으로 변경 */
+    color: white; /* 마우스 호버 시 텍스트 색상을 흰색으로 변경 */
+  }
+
+  #write-btn {
+    background-color: #000; /* 검정색 배경 */
+    color: #fff; /* 흰색 텍스트 */
+    border: none; /* 테두리 제거 */
+    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+  }
+  
+  #write-btn:hover {
+    background-color: #333; /* 마우스 호버 시 배경색 조정 */
+  }
+
+  /* 페이지 이동 버튼 스타일링 */
+        .pagination .page-link {
+            color: #000;
+            background-color: #fff;
+            border-color: #000;
+        }
+
+        .pagination .page-link:hover {
+            color: #fff;
+            background-color: #888888;
+            border-color: #000;
+        }
+
+        .pagination .page-item.active .page-link {
+            color: #fff;
+            background-color: #888888;
+            border-color: #000;
+        }
+
+        /* 이전, 다음 페이지 버튼 스타일링 */
+        .pagination .page-item:first-child .page-link,
+        .pagination .page-item:last-child .page-link {
+            color: #000000;
+            background-color: #ffffff;
+            border-color: #000;
+        }
+
+        /* 처음, 끝 페이지 버튼 스타일링 */
+        .pagination .page-item:first-child .page-link:hover,
+        .pagination .page-item:last-child .page-link:hover {
+            color: #ffffff;
+            background-color: #888888;
+            border-color: #000;
+        }

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>쪽지함</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/box.css') }}">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <style>
+      .scrollable-list {
+          max-height: 800px;
+          overflow-y: auto;
+      }
+      .empty-list-placeholder {
+          height: 400px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: #6c757d;
+      }
+      .selected-message {
+        background-color: #007bff;
+        color: white;
+      }
+      .empty-message span {
+        visibility: hidden;
+      }
+      /* 드롭다운 메뉴가 화면 밖으로 넘어가지 않도록 위치 조정 */
+      .dropdown-menu {
+        right: 0; /* 드롭다운 메뉴를 네비게이션 바의 오른쪽 끝에 맞추기 */
+        left: auto; /* 드롭다운 메뉴가 왼쪽으로 넘어가지 않도록 설정 */
+        transform: translateX(-10%); /* 드롭다운 메뉴가 약간 중앙으로 이동 */
+      }
+    </style>
+    <script>
+      function showFlashMessage(message) {
+          if (message) {
+              alert(message);
+          }
+      }
+    </script>
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+
+    <div class="container mt-5">
+        <div class="row">
+            <!-- 쪽지 목록 영역 -->
+            <div class="col-md-4">
+                <form method="POST" action="{{ url_for('delete_messages') }}"> <!-- 전체를 form으로 감쌈 -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3 style="font-family: 'TTLaundryGothic';">쪽지 목록</h3>
+                        <div>
+                            <!-- 모두 선택 버튼 추가 -->
+                            <button id="selectAll" type="button" class="btn btn-dark" style="font-family: 'TTLaundryGothic';">모두 선택</button>
+                            <button id="deleteSelected" class="btn btn-primary" style="background-color: #000;color: #fff;border: none;cursor: pointer; font-family: 'TTLaundryGothic';">삭제</button>
+                        </div>
+                    </div>
+                    <ul class="list-group scrollable-list">
+                        {% if messages and messages|length > 0 %}
+                            {% for message in messages %}
+                                <li class="list-group-item message-item" data-id="{{ message.id }}" style="font-family: 'TTLaundryGothic';">
+                                    <input type="checkbox" name="message_ids" value="{{ message.id }}"> 
+                                    {{ message.subject }} (보낸 사람: {{ message.sender_id }})
+                                </li>
+                            {% endfor %}
+                            {% for i in range(15 - messages|length) %}
+                                <li class="list-group-item empty-message" style="font-family: 'TTLaundryGothic';">
+                                    <span>빈 메시지</span>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            {% for i in range(15) %}
+                                <li class="list-group-item empty-message" style="font-family: 'TTLaundryGothic';">
+                                    <span>빈 메시지</span>
+                                </li>
+                            {% endfor %}
+                        {% endif %}
+                    </ul>
+                </form> <!-- form을 닫음 -->
+            </div>
+
+            <!-- 쪽지 내용 영역 -->
+            <div class="col-md-8">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 style="font-family: 'TTLaundryGothic';">쪽지 내용</h3>
+                    <button id="write-btn" class="btn btn-primary" style="font-family: 'TTLaundryGothic';">
+                        <a href="/messages/write" style="color: inherit; text-decoration: none;">쪽지 보내기</a>
+                    </button>
+                </div>
+                <div id="message-details">
+                    <p style="font-family: 'TTLaundryGothic';">쪽지를 선택해 주세요.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+      $(document).ready(function() {
+          $('.message-item').click(function() {
+              var messageId = $(this).data('id');
+
+              $('.message-item').removeClass('selected-message');
+              $(this).addClass('selected-message');
+
+              $.ajax({
+                  url: '/message/details/' + messageId,
+                  type: 'GET',
+                  success: function(data) {
+                      $('#message-details').html(
+                          '<div class="card">' +
+                            '<div class="card-header" style="font-family: \'TTLaundryGothic\';">' +
+                              '<strong>보낸 사람:</strong> ' + data.sender_id + ' &nbsp;|&nbsp;' +
+                              '<strong>MBTI:</strong> ' + data.sender_mbti + ' &nbsp;|&nbsp;' +
+                              '<strong>받은 날짜:</strong> ' + data.sent_at +
+                            '</div>' +
+                            '<div class="card-body">' +
+                              '<p style="font-family: \'TTLaundryGothic\';">' + data.content + '</p>' +
+                            '</div>' +
+                            '<div class="card-footer d-flex">' +
+                              '<a href="/messages/write?recipient=' + data.sender_id + '" class="btn btn-primary mr-2" style="font-family: \'TTLaundryGothic\';">답장</a>' +
+                              '<form method="POST" action="/messages">' +
+                                '<input type="hidden" name="delete_message" value="' + data.id + '">' +
+                                '<button type="submit" class="btn btn-danger" style="font-family: \'TTLaundryGothic\';">삭제</button>' +
+                              '</form>' +
+                            '</div>' +
+                          '</div>'
+                      );
+                  },
+                  error: function() {
+                      alert('메시지를 불러오는 데 실패했습니다.');
+                  }
+              });
+          });
+
+          // 모두 선택 버튼 클릭 이벤트
+          $('#selectAll').click(function() {
+              var checkboxes = $('input[name="message_ids"]');
+              checkboxes.prop('checked', !checkboxes.prop('checked'));
+          });
+      });
+    </script>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <script>
+            {% for category, message in messages %}
+                showFlashMessage("{{ message }}");
+            {% endfor %}
+        </script>
+    {% endif %}
+    {% endwith %}
+</body>
+</html>

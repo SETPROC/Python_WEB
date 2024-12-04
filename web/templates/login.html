@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBTI Login</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/font.css')}}">
+    <script>
+      // JavaScript로 플래시 메시지를 받아 경고창(alert)으로 띄움
+      function showFlashMessage(message) {
+          if (message) {
+              alert(message);
+          }
+      }
+  </script>
+  <style>
+    .search-btn {
+      background-color: white; /* 흰색 배경 */
+      color: black; /* 검정색 텍스트 */
+      border: none; /* 테두리 제거 */
+      cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+      font-family: 'TTLaundryGothic'; /* 폰트 설정 */
+    }
+        /* 드롭다운 메뉴가 화면 밖으로 넘어가지 않도록 위치 조정 */
+    .dropdown-menu {
+        right: 0; /* 드롭다운 메뉴를 네비게이션 바의 오른쪽 끝에 맞추기 */
+        left: auto; /* 드롭다운 메뉴가 왼쪽으로 넘어가지 않도록 설정 */
+        transform: translateX(-10%); /* 드롭다운 메뉴가 약간 중앙으로 이동 */
+    }
+    /* 마우스 호버 효과 */
+    .search-btn:hover {
+      background-color: black; /* 마우스 호버 시 배경색을 검정으로 변경 */
+      color: white; /* 마우스 호버 시 텍스트 색상을 흰색으로 변경 */
+    }
+  </style>
+  
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+      <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title text-center" style="font-family: 'TTLaundryGothic';">Login</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{{ url_for('login') }}">
+                            <div class="mb-3">
+                                <label for="username" class="form-label" style="font-family: 'TTLaundryGothic';">Username</label>
+                                <input type="text" name="username" id="username" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label" style="font-family: 'TTLaundryGothic';">Password</label>
+                                <input type="password" name="password" id="password" class="form-control" required>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <button type="submit" class="btn btn-primary" style="font-family: 'TTLaundryGothic';">Login</button>
+                                <!-- 회원가입 링크 추가 -->
+                                <a href="{{ url_for('register') }}" class="btn btn-link" style="font-family: 'TTLaundryGothic';">회원가입</a>
+                                <!-- 아이디/비밀번호 찾기 링크 추가 -->
+                                <a href="{{ url_for('forgot') }}" class="btn btn-link" style="font-family: 'TTLaundryGothic';">아이디/비밀번호 찾기</a>
+                              </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+    <!--
+    jinja2 example
+    {%for i in range(10)%}
+        <div>
+            Hello
+        </div>
+    {%endfor%}
+        
+    
+    이미지 불러오는 법
+    <img src="{{url_for('static',filename='img/img1.jpg')}}">
+    자바스크립트 불러오는 법
+    <script type="text/javascript" src="{{url_for('static',filename='js/main.js')}}"></script>
+    --> 
+    <script type="text/javascript" src="{{url_for('static',filename='js/bootstrap.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static',filename='js/bootstrap.bundle.min.js')}}"></script>
+     <!-- 플래시 메시지를 JavaScript로 넘김 -->
+     {% with messages = get_flashed_messages(with_categories=true) %}
+     {% if messages %}
+         <script>
+             // 플래시 메시지를 경고창으로 표시
+             {% for category, message in messages %}
+                 showFlashMessage("{{ message }}");
+             {% endfor %}
+         </script>
+     {% endif %}
+ {% endwith %}
+</body>
+</html>

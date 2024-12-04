@@ -1,0 +1,84 @@
+<!-- templates/navbar.html -->
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/" style="font-family: 'TTLaundryGothic';">Home</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-family: 'TTLaundryGothic';">
+                        MBTI
+                    </a>
+                    <ul class="dropdown-menu" style="right: auto; left: 0; transform: translateX(-10%);">
+                        <li><a class="dropdown-item" href="/mbtidescription" style="font-family: 'TTLaundryGothic';">MBTI 설명</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{url_for('mbti')}}" style="font-family: 'TTLaundryGothic';">MBTI 검사</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-family: 'TTLaundryGothic';">
+                        MBTI 채팅방
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ url_for('chat', mbti_type='ISTJ') }}" style="font-family: 'TTLaundryGothic'; background-color: #ABD7F2;">ISTJ 채팅방</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('chat', mbti_type='ISFJ') }}" style="font-family: 'TTLaundryGothic'; background-color: #C7E281;">ISFJ 채팅방</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('chat', mbti_type='INFJ') }}" style="font-family: 'TTLaundryGothic'; background-color: #F7B492;">INFJ 채팅방</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('chat', mbti_type='INTJ') }}" style="font-family: 'TTLaundryGothic'; background-color: #FAB8F2;">INTJ 채팅방</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('chat', mbti_type='ISTP') }}" style="font-family: 'TTLaundryGothic'; background-color: #7EE6E7;">ISTP 채팅방</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('chat', mbti_type='ISFP') }}" style="font-family: 'TTLaundryGothic'; background-color: #FBBCE1;">ISFP 채팅방</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('chat', mbti_type='INFP') }}" style="font-family: 'TTLaundryGothic'; background-color: #C2D3FE;">INFP 채팅방</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('chat', mbti_type='INTP') }}" style="font-family: 'TTLaundryGothic'; background-color: #E7E197;">INTP 채팅방</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('chat', mbti_type='ESTP') }}" style="font-family: 'TTLaundryGothic'; background-color: #EADAC1;">ESTP 채팅방</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('chat', mbti_type='ESFP') }}" style="font-family: 'TTLaundryGothic'; background-color: #E3C8F5;">ESFP 채팅방</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('chat', mbti_type='ENFP') }}" style="font-family: 'TTLaundryGothic'; background-color: #FCD7AA;">ENFP 채팅방</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('chat', mbti_type='ENTP') }}" style="font-family: 'TTLaundryGothic'; background-color: #BFE2F1;">ENTP 채팅방</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('chat', mbti_type='ESTJ') }}" style="font-family: 'TTLaundryGothic'; background-color: #C2C2C2;">ESTJ 채팅방</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('chat', mbti_type='ESFJ') }}" style="font-family: 'TTLaundryGothic'; background-color: #F9CC88;">ESFJ 채팅방</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('chat', mbti_type='ENFJ') }}" style="font-family: 'TTLaundryGothic'; background-color: #A8DFC0;">ENFJ 채팅방</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('chat', mbti_type='ENTJ') }}" style="font-family: 'TTLaundryGothic'; background-color: #D7B4D4;">ENTJ 채팅방</a></li>
+                    </ul>
+                </li>
+                
+                <li class="nav-item"><a class="nav-link" href="/free" style="font-family: 'TTLaundryGothic';">자유 게시판</a></li>
+                <li class="nav-item"><a class="nav-link" href="/love" style="font-family: 'TTLaundryGothic';">연애 게시판</a></li>
+                <li class="nav-item"><a class="nav-link" href="/concern" style="font-family: 'TTLaundryGothic';">고민 게시판</a></li>
+                <li class="nav-item"><a class="nav-link" href="/discussion" style="font-family: 'TTLaundryGothic';">토론 게시판</a></li>
+            </ul>
+            <form class="d-flex" action="{{ url_for('search_all') }}" method="get" style="align-items: center;">
+                <input class="form-control me-2" type="search" name="search" placeholder="전체 게시판에서 검색" aria-label="Search" style="font-family: 'TTLaundryGothic';">
+                <button class="btn btn-outline-secondary search-btn" type="submit" style="font-family: 'TTLaundryGothic';">Search</button>
+            </form>
+            <ul class="navbar-nav">
+              {% if not session.get('user_id') %}
+                  <li class="nav-item">
+                      <a class="nav-link" href="/login" style="font-family: 'TTLaundryGothic';">Login</a>
+                  </li>
+              {% else %}
+                  <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" 
+                         style="font-family: 'TTLaundryGothic'; color: {% if session['unread_count'] > 0 %}red{% else %}inherit{% endif %};">
+                          {{ session.get('user_id') }}
+                      </a>
+                      <ul class="dropdown-menu dropdown-menu-end" style="left: auto; right: 0; transform: translateX(-10%);">
+                          <li><a class="dropdown-item" href="/profile" style="font-family: 'TTLaundryGothic';">프로필 설정</a></li>
+                          <li>
+                              <a class="dropdown-item" href="/messages" style="font-family: 'TTLaundryGothic';">
+                                  쪽지 확인 
+                                  {% if session['unread_count'] > 0 %}
+                                      <span style="color: red;">({{ session['unread_count'] }})</span>
+                                  {% endif %}
+                              </a>
+                          </li>
+                          {% if session.get('user_id')=='admin'%}
+                          <li><a class="dropdown-item" href="{{url_for('admin_dashboard')}}" style="font-family: 'TTLaundryGothic';">유저 관리</a></li>
+                          {%endif%}
+                          <li><a class="dropdown-item" href="{{ url_for('logout') }}" style="font-family: 'TTLaundryGothic';">로그아웃</a></li>
+                      </ul>
+                  </li>
+              {% endif %}
+          </ul>
+        </div>
+    </div>
+</nav>

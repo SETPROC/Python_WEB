@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBTI 설명</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/font.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/box.css')}}">
+    <style>
+            /* 드롭다운 메뉴가 화면 밖으로 넘어가지 않도록 위치 조정 */
+    .dropdown-menu {
+        right: 0; /* 드롭다운 메뉴를 네비게이션 바의 오른쪽 끝에 맞추기 */
+        left: auto; /* 드롭다운 메뉴가 왼쪽으로 넘어가지 않도록 설정 */
+        transform: translateX(-10%); /* 드롭다운 메뉴가 약간 중앙으로 이동 */
+    }
+    </style>
+    <script>
+        // JavaScript로 플래시 메시지를 받아 경고창(alert)으로 띄움
+        function showFlashMessage(message) {
+            if (message) {
+                alert(message);
+            }
+        };
+    </script>
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+      <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="text-center mb-4" style="font-family: 'TTLaundryGothicB';">MBTI 설명</h1>
+                <p class="lead" style="font-family: 'TTLaundryGothic';">MBTI는 개인의 성격 유형을 분류하는 심리학적 테스트입니다. 이 테스트는 사람들이 어떻게 생각하고, 어떻게 행동하며, 어떻게 감정을 표현하는지를 분석하여 4가지 성격 유형으로 나눕니다. 각 유형은 4가지 성격 유형으로 나누어집니다: 실제성(Sensing), 감각성(Intuition), 심리성(Thinking), 감정성(Feeling)입니다.</p>
+                <p style="font-family: 'TTLaundryGothic';">MBTI는 개인의 성격 유형을 이해하고, 다른 사람들과의 관계를 개선하는 데 도움이 될 수 있습니다. 각 유형은 고유한 장단점과 특성을 가지고 있으며, 이를 이해하고 존중하는 것이 중요합니다.</p>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-6 mbti-section">
+                <h2 style="font-family: 'TTLaundryGothicB';">E와 I</h2>
+                <p style="font-family: 'TTLaundryGothic';">E는 실제성(Sensing)을 나타내며, 실제 세계와 현실에 대한 관심이 높습니다. 이들은 논리적이고 구체적인 정보를 선호하며, 계획과 예측을 중요시합니다. E는 실제 세계에 대한 관찰과 분석을 통해 결정을 내립니다.</p>
+                <p style="font-family: 'TTLaundryGothic';">I는 감각성(Intuition)을 나타내며, 추상적인 개념과 가능성에 대한 관심이 높습니다. 이들은 논리보다는 감각적인 통찰력을 선호하며, 새로운 아이디어와 가능성을 탐구합니다. I는 직관과 예상을 통해 결정을 내립니다.</p>
+            </div>
+            <div class="col-md-6 mbti-section">
+                <h2 style="font-family: 'TTLaundryGothicB';">S와 N</h2>
+                <p style="font-family: 'TTLaundryGothic';">S는 실제성(Sensing)을 나타내며, 실제 세계와 현실에 대한 관심이 높습니다. 이들은 논리적이고 구체적인 정보를 선호하며, 계획과 예측을 중요시합니다. S는 실제 세계에 대한 관찰과 분석을 통해 결정을 내립니다.</p>
+                <p style="font-family: 'TTLaundryGothic';">N은 감각성(Intuition)을 나타내며, 추상적인 개념과 가능성에 대한 관심이 높습니다. 이들은 논리보다는 감각적인 통찰력을 선호하며, 새로운 아이디어와 가능성을 탐구합니다. N은 직관과 예상을 통해 결정을 내립니다.</p>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-6 mbti-section">
+                <h2 style="font-family: 'TTLaundryGothicB';">F와 T</h2>
+                <p style="font-family: 'TTLaundryGothic';">F는 감정성(Feeling)을 나타내며, 사람들과의 관계와 감정에 대한 관심이 높습니다. 이들은 사람들의 감정과 필요를 이해하고, 공감하며, 지원하는 데 중점을 둡니다. F는 감정적인 통찰력과 관계를 통해 결정을 내립니다.</p>
+                <p style="font-family: 'TTLaundryGothic';">T는 심리성(Thinking)을 나타내며, 논리와 분석에 대한 관심이 높습니다. 이들은 논리적인 접근과 계획을 선호하며, 객관적인 데이터와 분석을 통해 결정을 내립니다. T는 논리와 분석을 통해 결정을 내립니다.</p>
+            </div>
+            <div class="col-md-6 mbti-section">
+                <h2 style="font-family: 'TTLaundryGothicB';">P와 J</h2>
+                <p style="font-family: 'TTLaundryGothic';">P는 심리성(Thinking)을 나타내며, 논리와 분석에 대한 관심이 높습니다. 이들은 논리적인 접근과 계획을 선호하며, 객관적인 데이터와 분석을 통해 결정을 내립니다. P는 논리와 분석을 통해 결정을 내립니다.</p>
+                <p style="font-family: 'TTLaundryGothic';">J는 감정성(Feeling)을 나타내며, 사람들과의 관계와 감정에 대한 관심이 높습니다. 이들은 사람들의 감정과 필요를 이해하고, 공감하며, 지원하는 데 중점을 둡니다. J는 감정적인 통찰력과 관계를 통해 결정을 내립니다.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!--
+    jinja2 example
+    {%for i in range(10)%}
+        <div>
+            Hello
+        </div>
+    {%endfor%}
+        
+    
+    이미지 불러오는 법
+    <img src="{{url_for('static',filename='img/img1.jpg')}}">
+    자바스크립트 불러오는 법
+    <script type="text/javascript" src="{{url_for('static',filename='js/main.js')}}"></script>
+    --> 
+    <!-- 플래시 메시지를 JavaScript로 넘김 -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <script>
+            // 플래시 메시지를 경고창으로 표시
+            {% for category, message in messages %}
+                showFlashMessage("{{ message }}");
+            {% endfor %}
+        </script>
+    {% endif %}
+    {% endwith %}
+    <script type="text/javascript" src="{{url_for('static',filename='js/bootstrap.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static',filename='js/bootstrap.bundle.min.js')}}"></script>
+
+</body>
+</html>

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ mbti_type }} 채팅방</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/font.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/box.css')}}">
+    <style>
+        /* 채팅 컨테이너 스타일 */
+        #chat-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 10px;
+            border: 2px solid black;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            font-family: 'Nanum Gothic', sans-serif;
+        }
+
+        #chat-box {
+            height: 500px;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        /* 채팅 메시지 스타일 */
+        .chat-message {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+            word-wrap: break-word;
+        }
+
+        /* 본인 메시지 (오른쪽 정렬) */
+        .my-message {
+            justify-content: flex-end;
+            text-align: right;
+        }
+
+        .my-message .profile-img {
+            order: 2;
+            margin-left: 10px;
+            margin-right: 0;
+        }
+
+        /* MBTI별로 body 배경색 설정 */
+        .mbti-istj { background-color: #ABD7F2; }
+        .mbti-isfj { background-color: #C7E281; }
+        .mbti-infj { background-color: #F7B492; }
+        .mbti-intj { background-color: #FAB8F2; }
+        .mbti-istp { background-color: #7EE6E7; }
+        .mbti-isfp { background-color: #FBBCE1; }
+        .mbti-infp { background-color: #C2D3FE; }
+        .mbti-intp { background-color: #E7E197; }
+        .mbti-estp { background-color: #EADAC1; }
+        .mbti-esfp { background-color: #E3C8F5; }
+        .mbti-enfp { background-color: #FCD7AA; }
+        .mbti-entp { background-color: #BFE2F1; }
+        .mbti-estj { background-color: #C2C2C2; }
+        .mbti-esfj { background-color: #F9CC88; }
+        .mbti-enfj { background-color: #A8DFC0; }
+        .mbti-entj { background-color: #D7B4D4; }
+
+        /* MBTI별로 메시지 배경색 설정 */
+        .my-message .message-content {
+            background-color: {% if mbti_type == 'ISTJ' %}#ABD7F2
+                          {% elif mbti_type == 'ISFJ' %}#C7E281
+                          {% elif mbti_type == 'INFJ' %}#F7B492
+                          {% elif mbti_type == 'INTJ' %}#FAB8F2
+                          {% elif mbti_type == 'ISTP' %}#7EE6E7
+                          {% elif mbti_type == 'ISFP' %}#FBBCE1
+                          {% elif mbti_type == 'INFP' %}#C2D3FE
+                          {% elif mbti_type == 'INTP' %}#E7E197
+                          {% elif mbti_type == 'ESTP' %}#EADAC1
+                          {% elif mbti_type == 'ESFP' %}#E3C8F5
+                          {% elif mbti_type == 'ENFP' %}#FCD7AA
+                          {% elif mbti_type == 'ENTP' %}#BFE2F1
+                          {% elif mbti_type == 'ESTJ' %}#C2C2C2
+                          {% elif mbti_type == 'ESFJ' %}#F9CC88
+                          {% elif mbti_type == 'ENFJ' %}#A8DFC0
+                          {% elif mbti_type == 'ENTJ' %}#D7B4D4
+                          {% else %}#d1e7dd{% endif %};
+            border-radius: 10px;
+            padding: 8px;
+        }
+
+        /* 상대방 메시지 (왼쪽 정렬) */
+        .other-message .message-content {
+            background-color: #e9ecef;
+            border-radius: 10px;
+            padding: 8px;
+        }
+
+        .chat-message .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .chat-message .message-content {
+            font-size: 1rem;
+            max-width: 70%;
+        }
+
+        .chat-message .delete-button {
+            color: #ff4d4f;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+
+        /* 상태 메시지 스타일 */
+        .status-message-admin {
+            color: #007bff;
+            font-family: 'TTLaundryGothic';
+            margin-bottom: 10px;
+        }
+
+        .status-message-user {
+            color: #000000;
+            font-family: 'TTLaundryGothic';
+            margin-bottom: 10px;
+        }
+
+        /* 입력 폼 스타일 */
+        #message-form {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        #message {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'Nanum Gothic', sans-serif;
+        }
+
+        button {
+            padding: 8px 12px;
+            font-family: 'Nanum Gothic', sans-serif;
+        }
+            /* 어드민 메시지 스타일 (파란색 배경) */
+        .admin-message .message-content {
+            background-color: #007bff;
+            color: white;
+            border-radius: 10px;
+            padding: 8px;
+        }
+
+        /* 유저 목록을 가로로 배치하고, 세로 스크롤 추가 */
+        #user-list-content {
+            display: flex; /* 가로 배치 */
+            flex-wrap: wrap; /* 여러 줄로 나눔 */
+            overflow-y: auto; /* 세로 스크롤 추가 */
+            max-height: 100px; /* 최대 높이 설정 */
+            padding-left: 0;
+        }
+
+        #user-list-content li {
+            display: inline-block; /* 각 유저를 인라인 블록으로 처리 */
+            width: 20%; /* 한 줄에 5명씩 표시 */
+            margin-right: 15px; /* 유저 간 간격 */
+            text-align: center;
+            font-family: 'TTLaundryGothic'; /* 폰트 적용 */
+        }
+    </style>
+    <script>
+        // JavaScript로 플래시 메시지를 받아 경고창(alert)으로 띄움
+        function showFlashMessage(message) {
+            if (message) {
+                alert(message);
+            }
+        };
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
+</head>
+<body class="mbti-{{ mbti_type|lower }}">
+    {% include 'navbar.html' %}
+    <h1 class="text-center" style="font-family: 'TTLaundryGothic';">{{ mbti_type }} 채팅방</h1>
+    
+    <div id="chat-container">
+        <div id="user-list" class="mb-3">
+            <h5 style="font-family: 'TTLaundryGothic';">접속 중인 유저</h5>
+            <ul id="user-list-content" style="list-style-type: none;">
+                <!-- 접속 중인 유저 목록이 여기 추가됩니다 -->
+            </ul>
+        </div>
+        <div id="chat-box">
+            {% for message in messages %}
+                <div class="chat-message {% if message.user_id == session['user_id'] %}my-message{% else %}other-message{% endif %} {% if message.user_id == 'admin' %}admin-message{% endif %}" id="message-{{ message.id }}">
+                    <img src="{{ url_for('static', filename=message.author.profile_image or 'img/default_profile.png') }}" alt="프로필 이미지" class="profile-img">
+                    <div class="message-content" style="font-family: 'TTLaundryGothic';">
+                        <strong>{{ message.user_id }}</strong>: {{ message.content }}
+                        <small>{{ message.timestamp.strftime('%H:%M:%S') }}</small>
+                    </div>
+                    {% if is_admin %}
+                        <button class="btn btn-sm btn-link delete-button" style="font-family: 'TTLaundryGothic';" data-id="{{ message.id }}">삭제</button>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if user_mbti == mbti_type or is_admin %}
+        <form id="message-form">
+            <input type="text" style="font-family: 'TTLaundryGothic';" id="message" autocomplete="off" placeholder="메시지 입력">
+            <button type="submit" class="btn btn-primary" style="font-family: 'TTLaundryGothic';">전송</button>
+        </form>
+        {% else %}
+        <p class="text-center" style="font-family: 'TTLaundryGothic';">이 채팅방에서는 메시지를 보낼 수 없습니다.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        var socket = io.connect(window.location.protocol + '//' + document.domain + ':' + location.port);
+        var mbti_type = "{{ mbti_type }}";
+        
+        var lastJoinTime = 0;  // 마지막 입장 메시지 표시 시간을 저장
+        var lastLeaveTime = 0;  // 마지막 퇴장 메시지 표시 시간을 저장
+        
+        socket.on('connect', function() {
+            socket.emit('join', { mbti_type: mbti_type });
+        });
+        // 유저 목록을 갱신하는 이벤트
+        socket.on('user_list', function(users) {
+            var userListContent = document.getElementById('user-list-content');
+            userListContent.innerHTML = '';
+            users.forEach(function(user) {
+                var listItem = document.createElement('li');
+                listItem.textContent = user;
+                listItem.style.fontFamily = 'TTLaundryGothic';
+                userListContent.appendChild(listItem);
+            });
+        });
+        
+        // 상태 메시지 표시 - 중복 제한 추가
+    socket.on('status', function(data) {
+        var chatBox = document.getElementById('chat-box');
+        var now = Date.now();
+        
+        // 입장 메시지 처리
+        if (data.msg.includes("입장하였습니다")) {
+            if (now - lastJoinTime > 5000) {  // 3초 이내 중복 방지
+                lastJoinTime = now;
+                addStatusMessage(data.msg, data.is_admin);
+            }
+        } 
+        // 퇴장 메시지 처리
+        else if (data.msg.includes("퇴장하였습니다")) {
+            if (now - lastLeaveTime > 5000) {  // 3초 이내 중복 방지
+                lastLeaveTime = now;
+                addStatusMessage(data.msg, data.is_admin);
+                }
+            }
+        });
+        // 상태 메시지를 추가하는 함수
+        function addStatusMessage(message, isAdmin) {
+            var chatBox = document.getElementById('chat-box');
+            var statusClass = isAdmin ? "status-message-admin" : "status-message-user";
+            chatBox.innerHTML += `
+                <div class="${statusClass}">
+                    ${message}
+                </div>
+            `;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+        
+        // 메시지 이벤트
+        socket.on('message', function(data) {
+            var chatBox = document.getElementById('chat-box');
+            var messageClass = data.user_id === "{{ session['user_id'] }}" ? "my-message" : "other-message";
+            
+            // 어드민 메시지일 경우 'admin-message' 클래스를 추가
+            if (data.is_admin) {
+                messageClass += " admin-message";
+            }
+
+            chatBox.innerHTML += `
+                <div class="chat-message ${messageClass}" id="message-${data.id}">
+                    <img src="${data.profile_image}" alt="프로필 이미지" class="profile-img">
+                    <div class="message-content" style="font-family: 'TTLaundryGothic';">
+                        <strong>[${data.user_id}]</strong> ${data.msg} <small>${data.timestamp}</small>
+                    </div>
+                    {% if is_admin %}
+                        <button class="btn btn-sm btn-link delete-button" style="font-family: 'TTLaundryGothic';" data-id="${data.id}">삭제</button>
+                    {% endif %}
+                </div>
+            `;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+    
+        // 메시지 삭제 버튼 이벤트
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('delete-button')) {
+                var messageId = event.target.getAttribute('data-id');
+                socket.emit('delete_message', { id: messageId, mbti_type: mbti_type });
+            }
+        });
+    
+        // 메시지 삭제 이벤트
+        socket.on('message_deleted', function(data) {
+            var messageElement = document.getElementById('message-' + data.id);
+            if (messageElement) {
+                messageElement.remove();
+            }
+        });
+    
+        // 메시지 전송 폼 이벤트
+        document.getElementById('message-form').onsubmit = function(e) {
+            e.preventDefault();
+            var message = document.getElementById('message').value;
+            socket.emit('message', { mbti_type: mbti_type, message: message });
+            document.getElementById('message').value = '';
+        };
+        
+        // 페이지 이동 및 창 닫기 시 leave 이벤트 전송
+        function sendLeaveEvent() {
+            socket.emit('leave', { mbti_type: mbti_type });
+        }
+
+        window.addEventListener("beforeunload", sendLeaveEvent);
+        
+        // 네비게이션 바의 <a> 태그 클릭 시 leave 이벤트 전송
+        document.querySelectorAll("nav a").forEach(function(anchor) {
+            anchor.addEventListener("click", function(event) {
+                // href가 "#" 또는 빈 문자열이면 leave 이벤트를 방지
+                if (!anchor.getAttribute("href") || anchor.getAttribute("href") === "#") {
+                    event.preventDefault();
+                } else {
+                    sendLeaveEvent();
+                }
+            });
+        });
+
+    </script>
+    
+    
+    <!-- 플래시 메시지를 JavaScript로 넘김 -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <script>
+            // 플래시 메시지를 경고창으로 표시
+            {% for category, message in messages %}
+                showFlashMessage("{{ message }}");
+            {% endfor %}
+        </script>
+    {% endif %}
+    {% endwith %}
+    <script type="text/javascript" src="{{url_for('static',filename='js/bootstrap.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static',filename='js/bootstrap.bundle.min.js')}}"></script>
+</body>
+</html>

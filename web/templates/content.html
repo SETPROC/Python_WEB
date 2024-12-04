@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBTI 게시글 내용</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/font.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/box.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/post.css')}}">
+    <script>
+      // JavaScript로 플래시 메시지를 받아 경고창(alert)으로 띄움
+      function showFlashMessage(message) {
+          if (message) {
+              alert(message);
+          }
+      };
+    </script>
+    <style>
+        /* 드롭다운 메뉴가 화면 밖으로 넘어가지 않도록 위치 조정 */
+        .dropdown-menu {
+          right: 0;
+          left: auto;
+          transform: translateX(-10%);
+        }
+        
+        /* 댓글 영역 스크롤 설정 */
+        .comments {
+            max-height: 300px; /* 댓글 영역 최대 높이 설정 */
+            overflow-y: auto; /* 댓글이 4개를 초과하면 스크롤 생성 */
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+      
+    <div class="container my-4">
+        <h2 class="post-title" style="font-family:'TTLaundryGothic';">{{ post.title }}</h2>
+        <div class="post-meta" style="font-family:'TTLaundryGothic';">
+            작성자: {{ post.author.user_id }} &nbsp;|&nbsp; 
+            작성일: {{ post.created_at.strftime('%Y-%m-%d') }} &nbsp;|&nbsp; 
+            MBTI: {{ post.author.mbti }} &nbsp;|&nbsp; 
+            조회수: {{ post.views }} &nbsp;|&nbsp; 
+            추천수: {{ post.recommendations }}
+        </div>
+        <div class="d-flex mt-3">
+          {% if post.file_path %}
+          <div class="flex-shrink-0 me-3">
+              <img src="{{ url_for('static', filename=post.file_path) }}" alt="첨부 이미지" class="img-fluid" style="max-width: 300px; border: 1px solid #ddd;">
+          </div>
+          {% endif %}
+          
+          <div class="flex-grow-1" style="font-family:'TTLaundryGothic';">
+              <p>{{ post.content }}</p>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end mt-4">
+            <form action="{{ url_for('recommend_post', category=post.category, post_id=post.category_post_id) }}" method="POST" class="me-2">
+                <button class="btn btn-success" style="font-family:'TTLaundryGothic';">추천</button>
+            </form>
+            <button class="btn btn-primary me-2" style="font-family:'TTLaundryGothic';">
+                <a href="{{ url_for('edit_post', category=post.category, post_id=post.category_post_id) }}" style="color: inherit; text-decoration: none;">수정</a>
+            </button>
+            <form action="{{ url_for('delete_post', category=post.category, post_id=post.category_post_id) }}" method="POST">
+                <button class="btn btn-danger" style="font-family:'TTLaundryGothic';">삭제</button>
+            </form>
+        </div>
+       
+       <div class="comments mt-5">
+        <h4>댓글</h4>
+        {% for comment in post.comments %}
+        <div class="comment d-flex align-items-start border-bottom pb-2 mb-2">
+            <img src="{{ url_for('static', filename=comment.author.profile_image or 'img/default_profile.png') }}" alt="프로필 이미지" class="rounded-circle me-3" style="width: 50px; height: 50px;">
+            <div class="flex-grow-1">
+                <div class="d-flex align-items-center">
+                  <div class="comment-author me-2">{{ comment.author_id }}
+                    <span class="comment-mbti">[{{ comment.author.mbti or 'MBTI 없음' }}]</span>
+                  </div>
+                  {% if session['user_id'] == comment.author_id or session['user_id'] == 'admin' %}
+                  <form action="{{ url_for('delete_comment', comment_id=comment.id, post_id=post.category_post_id, category=post.category) }}" method="POST" class="d-inline">
+                      <button type="submit" class="btn btn-danger btn-sm">삭제</button>
+                  </form>
+                  {% endif %}
+                </div>
+                <div class="comment-date">{{ comment.created_at.strftime('%Y-%m-%d') }}</div>
+                <div class="comment-content">
+                  <p>{{ comment.content }}</p>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <p>아직 댓글이 없습니다. 첫 댓글을 작성해보세요!</p>
+        {% endfor %}
+      </div>
+
+      <div class="mt-4">
+        <h4>댓글 작성</h4>
+        <form action="{{ url_for('create_comment', category=post.category, post_id=post.category_post_id) }}" method="POST">
+            <div class="mb-3">
+                <label for="commentContent" class="form-label">내용</label>
+                <textarea class="form-control" id="commentContent" name="content" rows="3" placeholder="댓글 내용을 입력하세요"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" id="write-btn">댓글 작성</button>
+        </form>
+    </div>
+    </div>
+    
+    <script type="text/javascript" src="{{url_for('static',filename='js/bootstrap.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static',filename='js/bootstrap.bundle.min.js')}}"></script>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <script>
+            {% for category, message in messages %}
+                showFlashMessage("{{ message }}");
+            {% endfor %}
+        </script>
+    {% endif %}
+{% endwith %}
+</body>
+</html>
